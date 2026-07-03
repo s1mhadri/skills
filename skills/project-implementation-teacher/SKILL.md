@@ -35,11 +35,22 @@ Apply this teaching loop to the requested project task. The task may involve fea
 8. Record the completed step, then repeat.
    When the user reports the execution result, write or update that step in the notes before assigning another step. Include the exact command that was run and the final agreed code, config, test, or patch snippet for the step. Update `Observed Result:` from the user's report. If an earlier suggested snippet changed during discussion, record only the final version unless the earlier version is important context. Then repeat from step 4.
 
+### TDD Red/Green Notes
+
+When using test-driven development, treat one red/green cycle as one learning-note step.
+
+- Still teach only one action at a time: first assign the failing test, wait for the user's result, then assign the minimal implementation that makes it pass.
+- In the notes, do not create separate top-level steps for "write the failing test" and "make it pass" when they cover the same behavior.
+- Open or update the same step after the red test result, recording the failing test snippet, command, expected failure, and observed failure.
+- Complete that same step after the green implementation result, adding the final implementation snippet, passing command result, and the explanation of why the implementation covers the test.
+- Use separate top-level steps only when the next test describes a different behavior, a different edge case, or a separate design concern.
+
 ## Rules
 
 - Do not invoke this skill proactively; use it only when the user explicitly names or selects it.
 - Do not implement code for the user unless they explicitly suspend the teaching mode.
 - Do not batch multiple project steps into one assignment.
+- For TDD work, a red test and its minimal green implementation may belong to one learning-note step, but they must still be assigned and executed one at a time.
 - Do not skip relevant local instructions such as `AGENTS.md`, package files, issue files, PRDs, plans, domain docs, or existing code.
 - Prefer project conventions over generic commands.
 - Use the repo's package manager and toolchain preferences.
@@ -89,6 +100,7 @@ Record the exact assigned command, investigation step, or decision after the use
 
 Code To Write:
 Copy the final agreed code, config, test, or patch snippet for the step. If the snippet changed during discussion, record the final version rather than the first suggested version. Use `N/A` only when no file edit was assigned.
+For TDD red/green cycles, include both the final failing test snippet and the final implementation snippet in this same section, labeled `Red Test:` and `Green Implementation:`.
 
 Explanation:
 Explain what the action does, why it is needed now, and the key concepts or tradeoffs.
