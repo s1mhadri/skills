@@ -24,7 +24,7 @@ Apply this teaching loop to the requested project task. The task may involve fea
    Briefly describe the likely path only when useful, then choose exactly one next actionable step.
 
 5. Teach one step.
-   Tell the user what to do, why it matters, how to do it, what result to expect, and where to stop. Include exact commands and code/config snippets when needed.
+   Tell the user what to do, why it matters, how to do it, what result to expect, and where to stop. Include exact commands and code/config snippets when needed. When suggesting code or changes to existing code, include the target file path and starting line number so the user can quickly find where to look.
 
 6. Answer doubts before execution.
    If the user asks questions about the current step, answer them and keep focus on the same step. Do not advance and do not record the step as completed until the user reports the result of executing it.
@@ -62,6 +62,7 @@ When using test-driven development, treat one red/green cycle as one learning-no
 - Record the final agreed code, config, test, or patch snippet verbatim in notes after the user reports execution and before assigning the next step.
 - Do not blindly copy the first suggested snippet when it changed during discussion. Record the final version the user executed or should keep.
 - Do not summarize the final snippet in notes. The notes must contain the final snippet, or a precise unified diff if that is clearer.
+- When suggesting code or changes to existing code, provide the relevant file path and line number in the user-facing instruction. For new code locations, use the nearest stable anchor line where the insertion should happen.
 - For every assigned implementation step, include `Code To Write:` in the notes. Use `N/A` only when the user is not expected to edit code or config.
 - If a snippet is too long to include in full, include the smallest complete relevant snippet, the target file path, and the insertion or replacement location. Do not omit the snippet entirely.
 - Do not record a step as completed while the user is still asking questions or has not executed it.
