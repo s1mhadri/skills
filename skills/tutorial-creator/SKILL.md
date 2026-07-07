@@ -25,7 +25,7 @@ Keep the skill generic. Do not force software-project language onto every subjec
    - Use chapters when the topic has multiple milestones, concepts, subsystems, or implementation phases.
    - Use a single tutorial file when the topic can be taught cleanly in one sequence.
 5. Create the output folder at `.scratch/tutorial/<topic-slug>/`.
-6. Write Markdown files first:
+6. Read `assets/tutorial-format.md`, then write Markdown files first:
    - Multi-chapter tutorials: `index.md`, `01-<chapter-slug>.md`, `02-<chapter-slug>.md`, etc.
    - Single-file tutorials: `<topic-slug>.md`.
 7. Run the Markdown verification gate:
@@ -90,6 +90,8 @@ Start each Markdown file with one H1 title. For multi-chapter tutorials, include
 
 For multi-chapter tutorials, create `index.md` as the combined entry page. Use it to explain the tutorial goal, audience, assumptions, prerequisites, chapter sequence, and expected final outcome. Link to every chapter file. Keep it concise; the detailed instruction belongs in the chapter files.
 
+Before writing tutorial Markdown, read `assets/tutorial-format.md` and follow its format. It is the maintained source for the tutorial skeleton and the placement of mental model, adoption map, decisions, risk checklist, validation ladder, troubleshooting, readiness check, and further reading.
+
 For concept-learning and implementation-prep tutorials, the overview or first chapter must include the relevant version of these sections:
 
 - **Mental model**: the core concepts, vocabulary, data flow, lifecycle, state model, boundaries, process, or cause-and-effect relationships the reader must understand before acting.
@@ -100,56 +102,6 @@ For concept-learning and implementation-prep tutorials, the overview or first ch
 - **Readiness check**: how the reader can tell they understand enough to apply the concept to a feature, issue, project, discussion, or decision.
 
 Each chapter must finish at a usable, testable, or verifiable stopping point. Prefer chapters that complete one coherent learning or implementation slice: a reader should be able to finish the chapter, run the relevant check or exercise, and verify that the concept, workflow, or system works before moving on. Do not cut a chapter off where the reader cannot check whether they understood or changed the right thing.
-
-Use this shape for each chapter or single tutorial:
-
-```markdown
-# Chapter 1: Meaningful Chapter Title
-
-## Goal
-
-Explain what the reader will be able to do after this chapter.
-
-## Prerequisites
-
-List only prerequisites that materially affect success.
-
-## Steps
-
-### Step 1: One focused action
-
-#### What to do
-
-Give the exact instruction.
-
-#### What is happening
-
-Explain in detail what the step changes, creates, configures, or verifies. Describe the moving parts involved and how they fit into the larger tutorial.
-
-#### Code explanation
-
-When the step includes code, explain what the code does, how the important lines work, what data flows through it, and how it connects to the surrounding application. Prefer small code chunks that match the single focus of the step. If a larger block is unavoidable, break it into smaller snippets and explain each snippet separately instead of explaining the whole block at once. Omit this subsection only when no code or command needs explanation.
-
-#### Context and reasoning
-
-Provide the relevant background, constraints, tradeoffs, and reasoning behind the decisions made in this step. Explain why this approach is appropriate for a good real-world project.
-
-#### Integration notes
-
-When the tutorial could be applied to an existing project or workflow, explain where this step lands, what existing abstractions, documents, systems, people, or constraints to inspect first, and what coupling or conflation to avoid. Omit this subsection only when the step is purely conceptual or has no adoption implications.
-
-#### Validation
-
-Give the command, test, inspection, exercise, expected output, observable behavior, or worked-example result that proves this step worked. Include common failure symptoms, misconceptions, or wrong answers and what they usually mean.
-
-#### Caveats and notes
-
-Call out edge cases, tradeoffs, common mistakes, and safety concerns.
-
-#### Further reading
-
-Link to external references, official docs, source files, issues, or related concepts.
-```
 
 Omit empty subsections only when they would add no value. Keep every step focused on one thing; split a step if it mixes setup, design, implementation, and validation.
 
