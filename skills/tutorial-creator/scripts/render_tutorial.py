@@ -77,6 +77,44 @@ def render_code_block(code_lines: list[str], code_lang: str) -> str:
     return f'<pre class="code-block"><code{class_attr}>{numbered_lines}</code></pre>\n'
 
 
+def is_table_row(line: str) -> bool:
+    stripped = line.strip()
+    return stripped.startswith("|") and stripped.endswith("|") and stripped.count("|") >= 2
+
+
+def is_table_separator(line: str) -> bool:
+    if not is_table_row(line):
+        return False
+    cells = parse_table_row(line)
+    return bool(cells) and all(re.fullmatch(r":?-{3,}:?", cell) for cell in cells)
+
+
+def parse_table_row(line: str) -> list[str]:
+    return [cell.strip() for cell in line.strip().strip("|").split("|")]
+
+
+def render_table(table_lines: list[str]) -> str:
+    header = parse_table_row(table_lines[0])
+    body_rows = [parse_table_row(line) for line in table_lines[2:]]
+    column_count = len(header)
+
+    def normalize(cells: list[str]) -> list[str]:
+        padded = cells[:column_count] + [""] * max(0, column_count - len(cells))
+        return padded[:column_count]
+
+    output = ['<div class="table-wrap">\n<table>\n<thead>\n<tr>\n']
+    for cell in header:
+        output.append(f"<th>{inline_markdown(cell)}</th>\n")
+    output.append("</tr>\n</thead>\n<tbody>\n")
+    for row in body_rows:
+        output.append("<tr>\n")
+        for cell in normalize(row):
+            output.append(f"<td>{inline_markdown(cell)}</td>\n")
+        output.append("</tr>\n")
+    output.append("</tbody>\n</table>\n</div>\n")
+    return "".join(output)
+
+
 def markdown_to_html(markdown: str) -> str:
     output: list[str] = []
     paragraph: list[str] = []
@@ -84,6 +122,8 @@ def markdown_to_html(markdown: str) -> str:
     in_code = False
     code_lines: list[str] = []
     code_lang = ""
+    lines = markdown.splitlines()
+    index = 0
 
     def flush_paragraph() -> None:
         nonlocal paragraph
@@ -91,7 +131,8 @@ def markdown_to_html(markdown: str) -> str:
             output.append(f"<p>{inline_markdown(' '.join(paragraph))}</p>\n")
             paragraph = []
 
-    for raw_line in markdown.splitlines():
+    while index < len(lines):
+        raw_line = lines[index]
         line = raw_line.rstrip()
 
         fence = re.match(r"^```([A-Za-z0-9_-]+)?\s*$", line)
@@ -107,16 +148,35 @@ def markdown_to_html(markdown: str) -> str:
                 output.append(closed)
                 in_code = True
                 code_lang = fence.group(1) or ""
+            index += 1
             continue
 
         if in_code:
             code_lines.append(raw_line)
+            index += 1
             continue
 
         if not line.strip():
             flush_paragraph()
             closed, open_list = close_list(open_list)
             output.append(closed)
+            index += 1
+            continue
+
+        if (
+            is_table_row(line)
+            and index + 1 < len(lines)
+            and is_table_separator(lines[index + 1].rstrip())
+        ):
+            flush_paragraph()
+            closed, open_list = close_list(open_list)
+            output.append(closed)
+            table_lines = [line, lines[index + 1].rstrip()]
+            index += 2
+            while index < len(lines) and is_table_row(lines[index].rstrip()):
+                table_lines.append(lines[index].rstrip())
+                index += 1
+            output.append(render_table(table_lines))
             continue
 
         heading = re.match(r"^(#{1,4})\s+(.+)$", line)
@@ -129,6 +189,7 @@ def markdown_to_html(markdown: str) -> str:
             output.append(
                 f'<h{level} id="{slugify_heading(text)}">{inline_markdown(text)}</h{level}>\n',
             )
+            index += 1
             continue
 
         unordered = re.match(r"^[-*]\s+(.+)$", line)
@@ -143,6 +204,7 @@ def markdown_to_html(markdown: str) -> str:
                 output.append(f"<{tag}>\n")
                 open_list = tag
             output.append(f"<li>{inline_markdown(content)}</li>\n")
+            index += 1
             continue
 
         quote = re.match(r"^>\s?(.+)$", line)
@@ -153,9 +215,11 @@ def markdown_to_html(markdown: str) -> str:
             output.append(
                 f"<blockquote>{inline_markdown(quote.group(1))}</blockquote>\n",
             )
+            index += 1
             continue
 
         paragraph.append(line.strip())
+        index += 1
 
     if in_code:
         raise ValueError("Unclosed Markdown code fence")

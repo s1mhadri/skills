@@ -93,6 +93,30 @@
       color: var(--muted);
       padding-left: 16px;
     }
+    .table-wrap {
+      overflow-x: auto;
+      margin: 0 0 1.1em;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 620px;
+      background: var(--paper);
+    }
+    th,
+    td {
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #eef2f7;
+      font-weight: 700;
+    }
+    tr:nth-child(even) td {
+      background: #fafbfc;
+    }
     .tutorial-header {
       margin-bottom: 20px;
     }
