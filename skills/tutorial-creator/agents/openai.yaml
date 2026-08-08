@@ -1,0 +1,5 @@
+interface:
+  display_name: "Tutorial Creator"
+  short_description: "Create tutorials based on a given spec or requirements"
+policy:
+  allow_implicit_invocation: false

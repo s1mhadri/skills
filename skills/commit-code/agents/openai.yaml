@@ -1,0 +1,5 @@
+interface:
+  display_name: "Commit Code"
+  short_description: "Commit changes to local active Git repository"
+policy:
+  allow_implicit_invocation: true

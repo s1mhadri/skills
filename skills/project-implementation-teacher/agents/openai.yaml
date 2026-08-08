@@ -1,0 +1,5 @@
+interface:
+  display_name: "Project Implementation Teacher"
+  short_description: "Guide users through implementing a project based on a given prompt or specification"
+policy:
+  allow_implicit_invocation: false
